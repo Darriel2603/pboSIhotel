@@ -15,18 +15,26 @@ public class Dashboard extends JFrame {
         JButton btnResepsionis = new JButton("Resepsionis");
         add(btnResepsionis);
 
+        btnResepsionis.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                new Reception();
+            }
+        });
+
         JButton btnAdmin = new JButton("Admin");
         add(btnAdmin);
 
         btnAdmin.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                dispose();
+
                 new AdminPage();
             }
         });
 
-        setBounds(500, 200, 600, 300);
+        setBounds(500, 200, 400, 400);
         setResizable(false);
         setVisible(true);
     }

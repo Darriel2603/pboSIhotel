@@ -6,7 +6,6 @@ import javax.swing.*;
 import java.awt.*;
 
 public class AdminPage extends JFrame {
-    private JLabel backgroundLabel;
 
     public AdminPage(){
         getContentPane();
@@ -25,9 +24,6 @@ public class AdminPage extends JFrame {
         btnRoom.setBounds(100,250,200,60);
         add(btnRoom);
 
-        ImageIcon backgroundImage = new ImageIcon("src/assets/background.jpg");
-        backgroundLabel = new JLabel(backgroundImage);
-        backgroundLabel.setBounds(0,0,400,400);
         setBounds(500,200,400,400);
         setResizable(false);
         setVisible(true);
