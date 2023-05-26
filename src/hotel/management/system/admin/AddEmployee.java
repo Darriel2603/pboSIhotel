@@ -118,7 +118,7 @@ public class AddEmployee extends JFrame implements ActionListener {
         add(image);
 
         getContentPane().setBackground(Color.WHITE);
-        setBounds(350, 50, 850, 540);
+        setBounds(535, 270, 850, 540);
         setResizable(false);
         setVisible(true);
     }
@@ -140,19 +140,22 @@ public class AddEmployee extends JFrame implements ActionListener {
 
         String job = (String) cbJob.getSelectedItem();
 
-        try {
-            Conn c = new Conn();
+        if (name.isEmpty() || age.isEmpty() || salary.isEmpty() || phone.isEmpty() || email.isEmpty() || nik.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Harap lengkapi semua field", "Error", JOptionPane.ERROR_MESSAGE);
+        } else {
+            try {
+                Conn c = new Conn();
 
-            String query = "INSERT INTO employee values( '"+name+"', '"+age+"', '"+gender+"', '"+job+"', '"+salary+"','"+phone+"', '"+email+"', '"+nik+"')";
+                String query = "INSERT INTO employee values( '" + name + "', '" + age + "', '" + gender + "', '" + job + "', '" + salary + "','" + phone + "', '" + email + "', '" + nik + "')";
 
-            c.s.executeQuery(query);
+                c.s.executeQuery(query);
 
-            JOptionPane.showMessageDialog(null, "Employee added success");
-            setVisible(false);
-        } catch (Exception e) {
-            e.printStackTrace();
+                JOptionPane.showMessageDialog(null, "Employee added success");
+                setVisible(false);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-
 
 
     }

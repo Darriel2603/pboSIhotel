@@ -4,6 +4,8 @@ import hotel.management.system.Dashboard;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class AdminPage extends JFrame {
 
@@ -13,6 +15,13 @@ public class AdminPage extends JFrame {
 
         JButton btnEmployee = new JButton("Add Employee");
         btnEmployee.setBounds(100,50,200,60);
+        btnEmployee.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+                new AddEmployee();
+            }
+        });
         add(btnEmployee);
 
         JButton btnDriver = new JButton("Add Driver");
@@ -23,12 +32,10 @@ public class AdminPage extends JFrame {
         btnRoom.setBounds(100,250,200,60);
         add(btnRoom);
 
-        setBounds(500,200,400,400);
+        setBounds(760,440,400,400);
         setResizable(false);
         setVisible(true);
     }
 
-    public static void main(String[] args) {
-        new AdminPage();
-    }
+
 }

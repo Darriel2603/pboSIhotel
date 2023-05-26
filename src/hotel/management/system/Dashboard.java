@@ -34,7 +34,7 @@ public class Dashboard extends JFrame {
             }
         });
 
-        setBounds(400, 200, 600, 200);
+        setBounds(660, 440, 600, 200);
         setResizable(false);
         setVisible(true);
     }
