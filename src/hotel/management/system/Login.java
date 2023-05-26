@@ -2,6 +2,8 @@ package hotel.management.system;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class Login extends JFrame {
     Login() {
@@ -29,6 +31,14 @@ public class Login extends JFrame {
         login.setBackground(Color.BLACK);
         login.setForeground(Color.WHITE);
         add(login);
+
+        login.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+                new Dashboard();
+            }
+        });
 
         JButton cancel = new JButton("Cancel");
         cancel.setBounds(280, 180, 120, 30);
