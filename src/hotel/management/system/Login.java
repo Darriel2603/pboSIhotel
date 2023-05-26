@@ -40,8 +40,8 @@ public class Login extends JFrame implements ActionListener {
 
         cancel = new JButton("Cancel");
         cancel.setBounds(190, 200, 120, 35);
-        cancel.setBackground(Color.BLACK);
-        cancel.setForeground(Color.WHITE);
+        cancel.setBackground(Color.white);
+        cancel.setForeground(Color.black);
         cancel.addActionListener(this);
         add(cancel);
 

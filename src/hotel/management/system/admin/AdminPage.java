@@ -18,7 +18,6 @@ public class AdminPage extends JFrame {
         btnEmployee.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                dispose();
                 new AddEmployee();
             }
         });
@@ -30,6 +29,12 @@ public class AdminPage extends JFrame {
 
         JButton btnRoom = new JButton("Add Rooms");
         btnRoom.setBounds(100,250,200,60);
+        btnRoom.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new AddRoom();
+            }
+        });
         add(btnRoom);
 
         setBounds(760,440,400,400);
