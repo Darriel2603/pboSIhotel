@@ -6,23 +6,29 @@ import javax.swing.*;
 import java.awt.*;
 
 public class AdminPage extends JFrame {
+    private JLabel backgroundLabel;
 
     AdminPage(){
-        getContentPane().setBackground(Color.WHITE);
+        getContentPane();
+        setLayout(null);
 
         JButton btnEmployee = new JButton("Employee");
-        btnEmployee.setBounds(200,50,100,100);
+        btnEmployee.setBounds(100,50,200,60);
+        btnEmployee.setBackground(Color.red);
         add(btnEmployee);
 
         JButton btnDriver = new JButton("Driver");
-        btnDriver.setBounds(200,180,100,100);
+        btnDriver.setBounds(100,150,200,60);
         add(btnDriver);
 
         JButton btnRoom = new JButton("Rooms");
-        btnRoom.setBounds(200,300,100,100);
+        btnRoom.setBounds(100,250,200,60);
         add(btnRoom);
 
-        setBounds(500,200,500,500);
+        ImageIcon backgroundImage = new ImageIcon("src/assets/background.jpg");
+        backgroundLabel = new JLabel(backgroundImage);
+        backgroundLabel.setBounds(0,0,400,400);
+        setBounds(500,200,400,400);
         setResizable(false);
         setVisible(true);
     }
