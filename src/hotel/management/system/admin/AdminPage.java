@@ -13,7 +13,6 @@ public class AdminPage extends JFrame {
 
         JButton btnEmployee = new JButton("Employee");
         btnEmployee.setBounds(100,50,200,60);
-        btnEmployee.setBackground(Color.red);
         add(btnEmployee);
 
         JButton btnDriver = new JButton("Driver");
