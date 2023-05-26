@@ -13,28 +13,28 @@ public class Dashboard extends JFrame {
         setLayout(new GridLayout(1, 2, 10, 10));
 
         JButton btnResepsionis = new JButton("Resepsionis");
+        btnResepsionis.setFont(new Font("Inter", Font.BOLD, 16));
         add(btnResepsionis);
 
         btnResepsionis.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
                 new Reception();
             }
         });
 
         JButton btnAdmin = new JButton("Admin");
+        btnAdmin.setFont(new Font("Inter", Font.BOLD, 16));
         add(btnAdmin);
 
         btnAdmin.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
                 new AdminPage();
             }
         });
 
-        setBounds(500, 200, 400, 400);
+        setBounds(400, 200, 600, 200);
         setResizable(false);
         setVisible(true);
     }
