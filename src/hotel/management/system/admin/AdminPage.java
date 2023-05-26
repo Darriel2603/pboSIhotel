@@ -8,7 +8,7 @@ import java.awt.*;
 public class AdminPage extends JFrame {
     private JLabel backgroundLabel;
 
-    AdminPage(){
+    public AdminPage(){
         getContentPane();
         setLayout(null);
 

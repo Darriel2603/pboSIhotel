@@ -2,6 +2,9 @@ package hotel.management.system;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import hotel.management.system.admin.*;
 
 public class Dashboard extends JFrame {
 
@@ -14,6 +17,14 @@ public class Dashboard extends JFrame {
 
         JButton btnAdmin = new JButton("Admin");
         add(btnAdmin);
+
+        btnAdmin.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+                new AdminPage();
+            }
+        });
 
         setBounds(500, 200, 600, 300);
         setResizable(false);
