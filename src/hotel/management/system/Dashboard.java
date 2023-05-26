@@ -1,18 +1,22 @@
 package hotel.management.system;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class Dashboard extends JFrame {
 
-    private JLabel backgroundLabel;
     Dashboard() {
-        setSize(1550, 1000);
+        getContentPane().setBackground(Color.WHITE);
+        setLayout(new GridLayout(1, 2, 10, 10));
 
-        ImageIcon backgroundImage = new ImageIcon("aseets/background dashboard.jpg");
-        backgroundLabel = new JLabel(backgroundImage);
-        backgroundLabel.setBounds(0, 0, 1550, 1000);
-        add(backgroundLabel);
+        JButton btnResepsionis = new JButton("Resepsionis");
+        add(btnResepsionis);
 
+        JButton btnAdmin = new JButton("Admin");
+        add(btnAdmin);
+
+        setBounds(500, 200, 600, 300);
+        setResizable(false);
         setVisible(true);
     }
 
