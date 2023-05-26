@@ -40,8 +40,4 @@ public class Login extends JFrame {
         setResizable(false);
         setVisible(true);
     }
-
-    public static void main(String[] args) {
-        new Login();
-    }
 }
