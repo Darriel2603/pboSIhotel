@@ -1,4 +1,4 @@
 package hotel.management.system;
 
-public class Test {
+public class testPush {
 }
