@@ -15,7 +15,7 @@ public class AdminPage extends JFrame {
 
         JButton btnEmployee = new JButton("Add Employee");
         btnEmployee.setBounds(100,50,200,60);
-        btnEmployee.addActionListener(new ActionListener() {
+        btnEmployee.addActionListener(new ActidonListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 new AddEmployee();
@@ -26,6 +26,13 @@ public class AdminPage extends JFrame {
         JButton btnDriver = new JButton("Add Driver");
         btnDriver.setBounds(100,150,200,60);
         add(btnDriver);
+
+        btnDriver.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new AddDrivers();
+            }
+        });
 
         JButton btnRoom = new JButton("Add Rooms");
         btnRoom.setBounds(100,250,200,60);
@@ -42,5 +49,7 @@ public class AdminPage extends JFrame {
         setVisible(true);
     }
 
-
+    public static void main(String[] args) {
+        new AdminPage();
+    }
 }
