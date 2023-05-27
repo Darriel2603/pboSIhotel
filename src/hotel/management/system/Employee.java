@@ -48,7 +48,6 @@ public class Employee extends JFrame {
         exitBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new Reception();
                 setVisible(false);
             }
         });
