@@ -15,7 +15,7 @@ public class AdminPage extends JFrame {
 
         JButton btnEmployee = new JButton("Add Employee");
         btnEmployee.setBounds(100,50,200,60);
-        btnEmployee.addActionListener(new ActidonListener() {
+        btnEmployee.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 new AddEmployee();
