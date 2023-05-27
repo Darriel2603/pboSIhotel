@@ -1,5 +1,8 @@
 package hotel.management.system;
 
 
-public class CustomerInfo {
+import javax.swing.*;
+
+public class CustomerInfo extends JFrame {
+
 }
