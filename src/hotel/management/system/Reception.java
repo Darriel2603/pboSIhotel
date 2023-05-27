@@ -9,9 +9,8 @@ public class Reception extends JFrame {
         getContentPane();
         setLayout(null);
 
-        JButton btnCustomer = new JButton("Customer");
+        JButton btnCustomer = new JButton("New Customer");
         btnCustomer.setBounds(100, 50, 200, 60);
-        btnCustomer.setBackground(Color.red);
         add(btnCustomer);
 
         JButton btnRoom = new JButton("Rooms");
