@@ -12,11 +12,9 @@ import java.util.*;
 public class AddDrivers extends JFrame implements ActionListener{
 
     private JPanel contentPane;
-    private JTextField nameField, ageField, carCompanyField, brandCarField, locatioinField;
+    private JTextField nameField, ageField, carCompanyField, brandCarField, locationField;
     private JComboBox<String> genderCB, availableCB;
     private JButton addBtn, cancelBtn;
-    private Choice choice;
-
 
     public AddDrivers() {
         setBounds(450, 200, 1000, 500);
@@ -28,8 +26,8 @@ public class AddDrivers extends JFrame implements ActionListener{
         Image scaledImage = imageIcon.getImage().getScaledInstance(500, 300, Image.SCALE_DEFAULT);
         ImageIcon driverImage = new ImageIcon(scaledImage);
         JLabel lblDriverImage = new JLabel(driverImage);
-        lblDriverImage.setBounds(400,30,500,370);
-        add(lblDriverImage);
+        lblDriverImage.setBounds(400, 30, 500, 370);
+        contentPane.add(lblDriverImage);
 
         JLabel heading = new JLabel("Add Driver");
         heading.setFont(new Font("Inter", Font.BOLD, 18));
@@ -102,9 +100,9 @@ public class AddDrivers extends JFrame implements ActionListener{
         locationLabel.setBounds(64, 310, 102, 22);
         contentPane.add(locationLabel);
 
-        locatioinField = new JTextField();
-        locatioinField.setBounds(174, 310, 156, 20);
-        contentPane.add(locatioinField);
+        locationField = new JTextField();
+        locationField.setBounds(174, 310, 156, 20);
+        contentPane.add(locationField);
 
         addBtn = new JButton("Add");
         addBtn.addActionListener(this);
@@ -125,30 +123,50 @@ public class AddDrivers extends JFrame implements ActionListener{
     }
 
     public void actionPerformed(ActionEvent ae){
-        try{
-            if(ae.getSource() == addBtn){
-                try{
-                    Conn c = new Conn();
-                    String nama = nameField.getText();
-                    String usia = ageField.getText();
-                    String jenisKelamin = (String)genderCB.getSelectedItem();
-                    String perusahaanMobil  = carCompanyField.getText();
-                    String merekMobil = brandCarField.getText();
-                    String tersedia = (String)availableCB.getSelectedItem();
-                    String lokasi = locatioinField.getText();
-                    String query = "INSERT INTO driver VALUES( '"+nama+"', '"+usia+"', '"+jenisKelamin+"','"+perusahaanMobil+"', '"+merekMobil+"', '"+tersedia+"','"+lokasi+"')";
-                    c.s.executeUpdate(query);
-                    JOptionPane.showMessageDialog(null, "Driver Successfully Added");
-                    this.setVisible(false);
-                }catch(Exception ee){
-                    System.out.println(ee);
-                }
-            }
-            else if(ae.getSource() == cancelBtn){
-                this.setVisible(false);
-            }
-        }catch(Exception eee){
+        if(ae.getSource() == addBtn){
+            try{
+                String nama = nameField.getText();
+                String usia = ageField.getText();
+                String jenisKelamin = (String) genderCB.getSelectedItem();
+                String perusahaanMobil = carCompanyField.getText();
+                String merekMobil = brandCarField.getText();
+                String tersedia = (String) availableCB.getSelectedItem();
+                String lokasi = locationField.getText();
 
+                if (nama.isEmpty() || usia.isEmpty() || perusahaanMobil.isEmpty() || merekMobil.isEmpty() || lokasi.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "Please complete all fields");
+                } else {
+                    Conn c = new Conn();
+
+                    String query = "INSERT INTO driver VALUES(?, ?, ?, ?, ?, ?, ?)";
+
+                    PreparedStatement ps = c.connection.prepareStatement(query);
+                    ps.setString(1, nama);
+                    ps.setString(2, usia);
+                    ps.setString(3, jenisKelamin);
+                    ps.setString(4, perusahaanMobil);
+                    ps.setString(5, merekMobil);
+                    ps.setString(6, tersedia);
+                    ps.setString(7, lokasi);
+
+                    int rowsAffected = ps.executeUpdate();
+
+                    if (rowsAffected > 0) {
+                        JOptionPane.showMessageDialog(null, "Driver added successfully");
+                        this.setVisible(false);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Failed to add driver");
+                    }
+
+                    ps.close();
+                    c.connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(null, "An error occurred while adding the driver");
+            }
+        } else if (ae.getSource() == cancelBtn){
+            this.setVisible(false);
         }
     }
 

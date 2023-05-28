@@ -1,18 +1,22 @@
 package hotel.management.system.admin;
+
 import hotel.management.system.Conn;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import hotel.management.system.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.regex.Pattern;
 
 public class AddEmployee extends JFrame implements ActionListener {
     JLabel nameLabel, ageLabel, genderLabel, jobLabel, salaryLabel, phoneLabel, emailLabel, image, nikLabel;
     JTextField nameField, ageField, salaryField, phoneField, emailField, nikField;
     JRadioButton rbMale, rbFemale;
     JComboBox<String> cbJob;
-    JButton submit;
+    JButton submit, cancel;
 
     AddEmployee() {
         setLayout(null);
@@ -41,15 +45,15 @@ public class AddEmployee extends JFrame implements ActionListener {
         add(genderLabel);
 
         rbMale = new JRadioButton("Male");
-        rbMale.setBounds(200, 130, 70, 30);
+        rbMale.setBounds(200, 130, 100, 30);
         rbMale.setFont(new Font("Inter", Font.PLAIN, 14));
         rbMale.setBackground(Color.WHITE);
         add(rbMale);
 
         rbFemale = new JRadioButton("Female");
-        rbFemale.setBounds(280, 130, 100, 30);
+        rbFemale.setBounds(300, 130, 120, 30);
         rbFemale.setFont(new Font("Inter", Font.PLAIN, 14));
-        rbFemale.setBackground(Color.WHITE);
+        rbFemale.setOpaque(false);
         add(rbFemale);
 
         ButtonGroup bg = new ButtonGroup();
@@ -61,8 +65,8 @@ public class AddEmployee extends JFrame implements ActionListener {
         jobLabel.setFont(new Font("Inter", Font.PLAIN, 17));
         add(jobLabel);
 
-        String[] str = {"Front Desk Clerks", "Porters", "Housekeeping", "Kitchen Staff", "Room Service", "Chef", "Waiter/Waitress", "Manager", "Accountant"};
-        cbJob = new JComboBox<>(str);
+        String[] jobOptions = {"Receptionist", "Waiter/Waitress", "Housekeeping", "Kitchen Staff", "Room Service", "Chef", "Waiter/Waitress", "Manager", "Accountant"};
+        cbJob = new JComboBox<>(jobOptions);
         cbJob.setBounds(200, 180, 150, 30);
         cbJob.setBackground(Color.WHITE);
         add(cbJob);
@@ -103,10 +107,17 @@ public class AddEmployee extends JFrame implements ActionListener {
         nikField.setBounds(200, 380, 150, 30);
         add(nikField);
 
-        submit = new JButton("Submit");
+        cancel = new JButton("Cancel");
+        cancel.setBackground(Color.WHITE);
+        cancel.setForeground(Color.BLACK);
+        cancel.setBounds(60, 430, 120, 30);
+        cancel.addActionListener(this);
+        add(cancel);
+
+        submit = new JButton("Add");
         submit.setBackground(Color.BLACK);
         submit.setForeground(Color.WHITE);
-        submit.setBounds(200, 430, 150, 30);
+        submit.setBounds(200, 430, 120, 30);
         submit.addActionListener(this);
         add(submit);
 
@@ -124,41 +135,87 @@ public class AddEmployee extends JFrame implements ActionListener {
     }
 
     public void actionPerformed(ActionEvent ae) {
-        String name = nameField.getText();
-        String age = ageField.getText();
-        String salary = salaryField.getText();
-        String phone = phoneField.getText();
-        String email = emailField.getText();
-        String nik = nikField.getText();
+        if (ae.getSource() == submit) {
+            String name = nameField.getText();
+            String age = ageField.getText();
+            String salary = salaryField.getText();
+            String phone = phoneField.getText();
+            String email = emailField.getText();
+            String nik = nikField.getText();
 
-        String gender = null;
-        if(rbMale.isSelected()) {
-            gender = "Male";
-        } else if (rbFemale.isSelected()) {
-            gender = "Female";
-        }
-
-        String job = (String) cbJob.getSelectedItem();
-
-        if (name.isEmpty() || age.isEmpty() || salary.isEmpty() || phone.isEmpty() || email.isEmpty() || nik.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Harap lengkapi semua field", "Error", JOptionPane.ERROR_MESSAGE);
-        } else {
-            try {
-                Conn c = new Conn();
-
-                String query = "INSERT INTO employee values( '" + name + "', '" + age + "', '" + gender + "', '" + job + "', '" + salary + "','" + phone + "', '" + email + "', '" + nik + "')";
-
-                c.s.executeQuery(query);
-
-                JOptionPane.showMessageDialog(null, "Employee added success");
-                setVisible(false);
-            } catch (Exception e) {
-                e.printStackTrace();
+            String gender = null;
+            if (rbMale.isSelected()) {
+                gender = "Male";
+            } else if (rbFemale.isSelected()) {
+                gender = "Female";
             }
+
+            String job = (String) cbJob.getSelectedItem();
+
+            if (name.isEmpty() || age.isEmpty() || salary.isEmpty() || phone.isEmpty() || email.isEmpty() || nik.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Please fill in all fields", "Error", JOptionPane.ERROR_MESSAGE);
+            } else if (!isValidAge(age)) {
+                JOptionPane.showMessageDialog(this, "Age must be a positive number", "Error", JOptionPane.ERROR_MESSAGE);
+            } else if (!isValidPhoneNumber(phone)) {
+                JOptionPane.showMessageDialog(this, "Invalid phone number", "Error", JOptionPane.ERROR_MESSAGE);
+            } else if (!isValidEmail(email)) {
+                JOptionPane.showMessageDialog(this, "Invalid email", "Error", JOptionPane.ERROR_MESSAGE);
+            } else {
+                try {
+                    Conn c = new Conn();
+
+                    String query = "INSERT INTO employee VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+
+                    PreparedStatement ps = c.connection.prepareStatement(query);
+                    ps.setString(1, name);
+                    ps.setInt(2, Integer.parseInt(age));
+                    ps.setString(3, gender);
+                    ps.setString(4, job);
+                    ps.setDouble(5, Double.parseDouble(salary));
+                    ps.setString(6, phone);
+                    ps.setString(7, email);
+                    ps.setString(8, nik);
+
+                    int rowsAffected = ps.executeUpdate();
+
+                    if (rowsAffected > 0) {
+                        JOptionPane.showMessageDialog(null, "Employee added successfully");
+                        setVisible(false);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Failed to add employee", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+
+                    ps.close();
+                    c.connection.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        } else if (ae.getSource() == cancel) {
+            setVisible(false);
+            new AdminPage().setVisible(true);
         }
-
-
     }
+
+    private boolean isValidAge(String age) {
+        try {
+            int ageValue = Integer.parseInt(age);
+            return ageValue > 0;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    private boolean isValidPhoneNumber(String phoneNumber) {
+        String regex = "\\d{10,12}"; // Phone number format: 10 to 12 digit numbers
+        return Pattern.matches(regex, phoneNumber);
+    }
+
+    private boolean isValidEmail(String email) {
+        String regex = "^[\\w.-]+@[\\w.-]+\\.[A-Za-z]{2,}$"; // Valid email format
+        return Pattern.matches(regex, email);
+    }
+
     public static void main(String[] args) {
         new AddEmployee();
     }

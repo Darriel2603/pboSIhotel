@@ -6,7 +6,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import hotel.management.system.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 public class AddRoom extends JFrame implements ActionListener {
     JLabel heading, roomnoLabel, availableLabel, cleanLabel, priceLabel, typeLabel;
@@ -110,23 +111,47 @@ public class AddRoom extends JFrame implements ActionListener {
             String type = (String) typeCombo.getSelectedItem();
 
             try {
+                // Validasi harga yang dimasukkan merupakan angka yang valid
+                double parsedPrice = Double.parseDouble(price);
+
+                // Validasi nomor kamar hanya terdiri dari angka
+                int parsedRoomNumber = Integer.parseInt(roomNumber);
+
+                // Menggunakan PreparedStatement untuk menghindari SQL Injection
                 Conn c = new Conn();
 
-                String query = "insert into room values('" + roomNumber + "','" + availability + "', '" + status + "', '" + price + "', '" + type + "')";
-
-                c.s.executeUpdate(query);
-
-                JOptionPane.showMessageDialog(null, "Room Successfully Added");
-                setVisible(false);
+                // Validasi nomor kamar yang tidak konflik
+                String query = "SELECT * FROM room WHERE roomnumber = ?";
+                PreparedStatement pstmt = c.connection.prepareStatement(query);
+                pstmt.setInt(1, parsedRoomNumber);
+                ResultSet rs = pstmt.executeQuery();
+                if (rs.next()) {
+                    // Konflik nomor kamar, minta pengguna memasukkan nomor kamar yang berbeda
+                    JOptionPane.showMessageDialog(null, "The room number already exists. Please enter a different room number.");
+                } else {
+                    // Nomor kamar tidak ada dalam database, eksekusi perintah INSERT
+                    query = "INSERT INTO room VALUES(?, ?, ?, ?, ?)";
+                    pstmt = c.connection.prepareStatement(query);
+                    pstmt.setString(1, roomNumber);
+                    pstmt.setString(2, availability);
+                    pstmt.setString(3, status);
+                    pstmt.setDouble(4, parsedPrice);
+                    pstmt.setString(5, type);
+                    pstmt.executeUpdate();
+                    JOptionPane.showMessageDialog(null, "Room Successfully Added");
+                    setVisible(false);
+                }
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null, "The price and room number must be numbers.");
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
 
         } else {
             setVisible(false);
         }
     }
+
 
     public static void main(String[] args) {
         new AddRoom();
