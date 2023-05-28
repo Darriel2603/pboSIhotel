@@ -100,18 +100,29 @@ public class Reception extends JFrame {
         });
         add(btnSearchRoom);
 
-        JButton btnLogout = new JButton("Logout");
-        btnLogout.setBounds(100, 670, 200, 60);
-        btnLogout.setFont(new Font("Inter", Font.BOLD, 17));
-        btnLogout.addActionListener(new ActionListener() {
+        JButton checkOutBtn = new JButton("Checkout");
+        checkOutBtn.setBounds(100, 670, 200, 60);
+        checkOutBtn.setFont(new Font("Inter", Font.BOLD, 17));
+        checkOutBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new CheckOut();
+            }
+        });
+        add(checkOutBtn);
+
+        JButton logOutBtn = new JButton("Logout");
+        logOutBtn.setBounds(100, 750, 200, 60);
+        logOutBtn.setFont(new Font("Inter", Font.BOLD, 17));
+        logOutBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 new Login();
             }
         });
-        add(btnLogout);
+        add(logOutBtn);
 
-        setBounds(760, 140, 400, 800);
+        setBounds(760, 100, 400, 880);
         setResizable(false);
         setVisible(true);
     }
