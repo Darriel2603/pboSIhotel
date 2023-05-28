@@ -12,9 +12,13 @@ public class Dashboard extends JFrame {
         getContentPane().setBackground(Color.WHITE);
         setLayout(new GridLayout(1, 2, 10, 10));
 
+        JPanel panel = new JPanel();
+        panel.setBackground(Color.WHITE);
+        panel.setLayout(new BorderLayout(10, 10));
+
         JButton btnResepsionis = new JButton("Resepsionis");
         btnResepsionis.setFont(new Font("Inter", Font.BOLD, 16));
-        add(btnResepsionis);
+        panel.add(btnResepsionis, BorderLayout.CENTER);
 
         btnResepsionis.addActionListener(new ActionListener() {
             @Override
@@ -23,9 +27,15 @@ public class Dashboard extends JFrame {
             }
         });
 
+        add(panel);
+
+        JPanel panel2 = new JPanel();
+        panel2.setBackground(Color.WHITE);
+        panel2.setLayout(new BorderLayout(10, 10));
+
         JButton btnAdmin = new JButton("Admin");
         btnAdmin.setFont(new Font("Inter", Font.BOLD, 16));
-        add(btnAdmin);
+        panel2.add(btnAdmin, BorderLayout.CENTER);
 
         btnAdmin.addActionListener(new ActionListener() {
             @Override
@@ -34,8 +44,11 @@ public class Dashboard extends JFrame {
             }
         });
 
+        add(panel2);
+
         setBounds(660, 440, 600, 200);
         setResizable(false);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
     }
 

@@ -88,16 +88,7 @@ public class NewCustomer extends JFrame implements ActionListener {
         chooseRoom.setBounds(200, 280, 150, 25);
         add(chooseRoom);
 
-        try {
-            Conn conn = new Conn();
-            String query = "select * from room";
-            ResultSet rs = conn.s.executeQuery(query);
-            while(rs.next()) {
-                chooseRoom.add(rs.getString("ROOMNUMBER"));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        fillRoomChoices();
 
         JLabel timeLabel = new JLabel("Checkin Time");
         timeLabel.setBounds(35, 320, 150, 20);
@@ -141,49 +132,67 @@ public class NewCustomer extends JFrame implements ActionListener {
         lblDriverImage.setBounds(400,50,300,400);
         add(lblDriverImage);
 
-
         setBounds(560, 265, 800, 550);
         setResizable(false);
         setVisible(true);
     }
 
+    // Metode untuk mengisi pilihan kamar yang tersedia
+    private void fillRoomChoices() {
+        try {
+            Conn conn = new Conn();
+            String query = "SELECT * FROM room WHERE availability = 'Available'";
+            ResultSet rs = conn.s.executeQuery(query);
+            while (rs.next()) {
+                chooseRoom.add(rs.getString("ROOMNUMBER"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
+        }
+    }
+
     public void actionPerformed(ActionEvent ae) {
         if (ae.getSource() == addBtn) {
+            // Validasi input
+            if (idNumberField.getText().isEmpty() || nameField.getText().isEmpty() || countryField.getText().isEmpty() || depositField.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Please fill in all the fields");
+                return;
+            }
+
+            // Logika tambahan saat menambahkan pelanggan baru
             String id = (String) idcombo.getSelectedItem();
             String idNumber = idNumberField.getText();
             String name = nameField.getText();
-            String gender = null;
-
-            if (maleRB.isSelected()) {
-                gender = "Male";
-            } else {
-                gender = "Female";
-            }
+            String gender = maleRB.isSelected() ? "Male" : "Female";
             String country = countryField.getText();
             String room = chooseRoom.getSelectedItem();
             String time = checkinTime.getText();
             String deposit = depositField.getText();
 
             try {
-                String query = "insert into kustomer values('" + id + "', '" + idNumber + "', '" + name + "', '" + gender + "', '" + country + "', '" + room + "', '" + time + "', '" + deposit + "')";
-
-                String query2 = "update room set availability = 'Occupied' where roomnumber = '" + room + "'";
+                String query = "INSERT INTO kustomer VALUES ('" + id + "', '" + idNumber + "', '" + name + "', '" + gender + "', '" + country + "', '" + room + "', '" + time + "', '" + deposit + "')";
+                String query2 = "UPDATE room SET availability = 'Occupied' WHERE roomnumber = '" + room + "'";
 
                 Conn conn = new Conn();
                 conn.s.executeQuery(query);
                 conn.s.executeUpdate(query2);
 
-                JOptionPane.showMessageDialog(null, "New Customer Add Successfully");
+                JOptionPane.showMessageDialog(null, "New Customer Added Successfully");
 
                 setVisible(false);
                 new Reception();
 
             } catch (Exception e) {
                 e.printStackTrace();
+                JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
             }
 
-        }else if (ae.getSource() == cancelBtn);
+        } else if (ae.getSource() == cancelBtn) {
+            setVisible(false);
+        }
     }
+
     public static void main(String[] args) {
         new NewCustomer();
     }

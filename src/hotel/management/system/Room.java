@@ -57,7 +57,6 @@ public class Room extends JFrame {
         backButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new Reception().setVisible(true);
                 setVisible(false);
             }
         });
