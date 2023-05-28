@@ -117,9 +117,15 @@ public class CheckOut extends JFrame {
         cancelBtn.setForeground(Color.WHITE);
         cancelBtn.setBounds(170, 280, 120, 30);
         add(cancelBtn);
+        cancelBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                setVisible(false);
+            }
+        });
 
 
-        setBounds(300, 200, 800, 400);
+        setBounds(710, 340, 500, 400);
         setResizable(false);
         setVisible(true);
     }
