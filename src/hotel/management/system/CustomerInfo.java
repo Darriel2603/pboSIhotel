@@ -16,7 +16,6 @@ public class CustomerInfo extends JFrame {
     private JTable table;
 
     CustomerInfo() {
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(510, 240, 900, 600);
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
