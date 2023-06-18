@@ -18,32 +18,37 @@ public class Room extends JFrame {
         this.price = price;
     }
 
-    public void addRoomToDatabase() {
+    public void addRoomToDatabase(int roomNumber, String availability, String cleaningStatus, double price, String bedType) {
         try {
             Conn c = new Conn();
 
             // Validasi nomor kamar yang tidak konflik
             String query = "SELECT * FROM room WHERE roomnumber = ?";
             PreparedStatement pstmt = c.connection.prepareStatement(query);
-            pstmt.setString(1, roomNumber);
+            pstmt.setInt(1, roomNumber);
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
                 // Konflik nomor kamar, minta pengguna memasukkan nomor kamar yang berbeda
-                JOptionPane.showMessageDialog(null, "The room number already exists. Please enter a different room number.");
+                JOptionPane.showMessageDialog(null, "Nomor kamar sudah ada. Silakan masukkan nomor kamar yang berbeda.");
             } else {
                 // Nomor kamar tidak ada dalam database, eksekusi perintah INSERT
-                query = "INSERT INTO room VALUES(?, ?, ?, ?, ?)";
+                query = "INSERT INTO room(roomnumber, availability, cleaning_status, price, bed_type) VALUES (?, ?, ?, ?, ?)";
                 pstmt = c.connection.prepareStatement(query);
-                pstmt.setString(1, roomNumber);
+                pstmt.setInt(1, roomNumber);
                 pstmt.setString(2, availability);
-                pstmt.setString(3, status);
+                pstmt.setString(3, cleaningStatus);
                 pstmt.setDouble(4, price);
+                pstmt.setString(5, bedType);
                 pstmt.executeUpdate();
-                JOptionPane.showMessageDialog(null, "Room Successfully Added");
+                JOptionPane.showMessageDialog(null, "Kamar berhasil ditambahkan");
                 setVisible(false);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
+
+
+
 }

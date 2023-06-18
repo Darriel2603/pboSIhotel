@@ -127,40 +127,22 @@ public class AddRoom extends JFrame implements ActionListener {
 
             // Lakukan operasi database untuk menyimpan data kamar ke dalam tabel
             try {
+                Room room = new Room(roomNumber, availability, cleaningStatus, price); // Membuat objek kelas Room
+                room.addRoomToDatabase(Integer.parseInt(roomNumber), availability, cleaningStatus, price, bedType);
 
-                Conn c = new Conn();
 
-                // Cek apakah nomor kamar sudah ada dalam database
-                String query = "SELECT * FROM room WHERE roomNumber = ?";
-                PreparedStatement pstmt = c.connection.prepareStatement(query);
-                pstmt.setString(1, roomNumber);
-                ResultSet rs = pstmt.executeQuery();
-                if (rs.next()) {
-                    // Jika nomor kamar sudah ada, tampilkan pesan kesalahan
-                    JOptionPane.showMessageDialog(this, "The room number already exists. Please enter a different room number.");
-                } else {
-                    // Nomor kamar belum ada dalam database, lanjutkan dengan menyimpan data kamar baru
-                    query = "INSERT INTO room(roomNumber, availability, cleaning_status, price, bed_type) VALUES (?, ?, ?, ?, ?)";
-                    PreparedStatement stmt = c.connection.prepareStatement(query);
-                    stmt.setString(1, roomNumber);
-                    stmt.setString(2, availability);
-                    stmt.setString(3, cleaningStatus);
-                    stmt.setDouble(4, price);
-                    stmt.setString(5, bedType);
-
-                    stmt.executeUpdate();
-
-                    JOptionPane.showMessageDialog(this, "Room successfully added!");
-                    setVisible(false);
-                }
             } catch (Exception ex) {
                 ex.printStackTrace();
-                JOptionPane.showMessageDialog(this, "Failed to add the room. Please try again.");
+                JOptionPane.showMessageDialog(this, "Gagal menambahkan kamar. Silakan coba lagi.");
             }
         } else {
             setVisible(false);
         }
     }
+
+
+
+
 
 
 
