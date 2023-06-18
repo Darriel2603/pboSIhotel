@@ -12,9 +12,16 @@ public class Conn {
     public Conn() {
         try {
             connection = DriverManager.getConnection(url, username, password);
+            if (connection != null) {
+                System.out.println("Koneksi ke database berhasil!");
+            } else {
+                System.out.println("Gagal melakukan koneksi ke database.");
+            }
+
             s = connection.createStatement();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
 }

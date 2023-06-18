@@ -1,6 +1,9 @@
 package hotel.management.system.admin;
 
 import hotel.management.system.Conn;
+import hotel.management.system.admin.room.Room;
+import hotel.management.system.admin.room.SingleBedRoom;
+import hotel.management.system.admin.room.DoubleBedRoom;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,7 +19,7 @@ public class AddRoom extends JFrame implements ActionListener {
     JButton addBtn, cancelBtn;
     JLabel image;
 
-    AddRoom() {
+    public AddRoom() {
         getContentPane().setBackground(Color.WHITE);
         setLayout(null);
 
@@ -74,6 +77,7 @@ public class AddRoom extends JFrame implements ActionListener {
         typeCombo = new JComboBox<>(typeOption);
         typeCombo.setBounds(200, 280, 150, 30);
         typeCombo.setBackground(Color.WHITE);
+        typeCombo.addActionListener(this); // Tambahkan ActionListener untuk menangani perubahan tipe kamar
         add(typeCombo);
 
         addBtn = new JButton("Add Room");
@@ -103,54 +107,62 @@ public class AddRoom extends JFrame implements ActionListener {
     }
 
     public void actionPerformed(ActionEvent ae) {
-        if (ae.getSource() == addBtn) {
-            String roomNumber = roomnoField.getText();
-            String availability = (String) availableCombo.getSelectedItem();
-            String status = (String) cleanCombo.getSelectedItem();
-            String price = priceField.getText();
-            String type = (String) typeCombo.getSelectedItem();
+        if (ae.getSource() == typeCombo) {
+            String selectedType = (String) typeCombo.getSelectedItem();
+            double finalPrice;
 
-            try {
-                // Validasi harga yang dimasukkan merupakan angka yang valid
-                double parsedPrice = Double.parseDouble(price);
-
-                // Validasi nomor kamar hanya terdiri dari angka
-                int parsedRoomNumber = Integer.parseInt(roomNumber);
-
-                // Menggunakan PreparedStatement untuk menghindari SQL Injection
-                Conn c = new Conn();
-
-                // Validasi nomor kamar yang tidak konflik
-                String query = "SELECT * FROM room WHERE roomnumber = ?";
-                PreparedStatement pstmt = c.connection.prepareStatement(query);
-                pstmt.setInt(1, parsedRoomNumber);
-                ResultSet rs = pstmt.executeQuery();
-                if (rs.next()) {
-                    // Konflik nomor kamar, minta pengguna memasukkan nomor kamar yang berbeda
-                    JOptionPane.showMessageDialog(null, "The room number already exists. Please enter a different room number.");
-                } else {
-                    // Nomor kamar tidak ada dalam database, eksekusi perintah INSERT
-                    query = "INSERT INTO room VALUES(?, ?, ?, ?, ?)";
-                    pstmt = c.connection.prepareStatement(query);
-                    pstmt.setString(1, roomNumber);
-                    pstmt.setString(2, availability);
-                    pstmt.setString(3, status);
-                    pstmt.setDouble(4, parsedPrice);
-                    pstmt.setString(5, type);
-                    pstmt.executeUpdate();
-                    JOptionPane.showMessageDialog(null, "Room Successfully Added");
-                    setVisible(false);
-                }
-            } catch (NumberFormatException e) {
-                JOptionPane.showMessageDialog(null, "The price and room number must be numbers.");
-            } catch (Exception e) {
-                e.printStackTrace();
+            if (selectedType.equals("Single Bed")) {
+                finalPrice = SingleBedRoom.getHargaKamar(); // Mengambil harga kamar dari kelas SingleBedRoom
+            } else {
+                finalPrice = DoubleBedRoom.getHargaKamar(); // Mengambil harga kamar dari kelas DoubleBedRoom
             }
 
+            priceField.setText(String.valueOf(finalPrice)); // Mengatur nilai harga kamar pada priceField
+        } else if (ae.getSource() == addBtn) {
+            String roomNumber = roomnoField.getText();
+            String availability = (String) availableCombo.getSelectedItem();
+            String cleaningStatus = (String) cleanCombo.getSelectedItem();
+            double price = Double.parseDouble(priceField.getText());
+            String bedType = (String) typeCombo.getSelectedItem();
+
+            // Lakukan operasi database untuk menyimpan data kamar ke dalam tabel
+            try {
+
+                Conn c = new Conn();
+
+                // Cek apakah nomor kamar sudah ada dalam database
+                String query = "SELECT * FROM room WHERE roomNumber = ?";
+                PreparedStatement pstmt = c.connection.prepareStatement(query);
+                pstmt.setString(1, roomNumber);
+                ResultSet rs = pstmt.executeQuery();
+                if (rs.next()) {
+                    // Jika nomor kamar sudah ada, tampilkan pesan kesalahan
+                    JOptionPane.showMessageDialog(this, "The room number already exists. Please enter a different room number.");
+                } else {
+                    // Nomor kamar belum ada dalam database, lanjutkan dengan menyimpan data kamar baru
+                    query = "INSERT INTO room(roomNumber, availability, cleaning_status, price, bed_type) VALUES (?, ?, ?, ?, ?)";
+                    PreparedStatement stmt = c.connection.prepareStatement(query);
+                    stmt.setString(1, roomNumber);
+                    stmt.setString(2, availability);
+                    stmt.setString(3, cleaningStatus);
+                    stmt.setDouble(4, price);
+                    stmt.setString(5, bedType);
+
+                    stmt.executeUpdate();
+
+                    JOptionPane.showMessageDialog(this, "Room successfully added!");
+                    setVisible(false);
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Failed to add the room. Please try again.");
+            }
         } else {
             setVisible(false);
         }
     }
+
+
 
 
     public static void main(String[] args) {
