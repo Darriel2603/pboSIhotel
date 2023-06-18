@@ -11,7 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.regex.Pattern;
 
-public class AddEmployee extends JFrame implements ActionListener {
+public class AddEmployee extends JFrame implements ActionListener, AddEmployeeInterface {
     JLabel nameLabel, ageLabel, genderLabel, jobLabel, salaryLabel, phoneLabel, emailLabel, image, nikLabel;
     JTextField nameField, ageField, salaryField, phoneField, emailField, nikField;
     JRadioButton rbMale, rbFemale;
@@ -153,13 +153,13 @@ public class AddEmployee extends JFrame implements ActionListener {
             String job = (String) cbJob.getSelectedItem();
 
             if (name.isEmpty() || age.isEmpty() || salary.isEmpty() || phone.isEmpty() || email.isEmpty() || nik.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Please fill in all fields", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Harap isi semua kolom", "Error", JOptionPane.ERROR_MESSAGE);
             } else if (!isValidAge(age)) {
-                JOptionPane.showMessageDialog(this, "Age must be a positive number", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Usia harus angka positif", "Error", JOptionPane.ERROR_MESSAGE);
             } else if (!isValidPhoneNumber(phone)) {
-                JOptionPane.showMessageDialog(this, "Invalid phone number", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Nomor telepon tidak valid", "Error", JOptionPane.ERROR_MESSAGE);
             } else if (!isValidEmail(email)) {
-                JOptionPane.showMessageDialog(this, "Invalid email", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Email tidak valid", "Error", JOptionPane.ERROR_MESSAGE);
             } else {
                 try {
                     Conn c = new Conn();
@@ -179,10 +179,10 @@ public class AddEmployee extends JFrame implements ActionListener {
                     int rowsAffected = ps.executeUpdate();
 
                     if (rowsAffected > 0) {
-                        JOptionPane.showMessageDialog(null, "Employee added successfully");
+                        JOptionPane.showMessageDialog(null, "Karyawan berhasil ditambahkan");
                         setVisible(false);
                     } else {
-                        JOptionPane.showMessageDialog(null, "Failed to add employee", "Error", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(null, "Gagal menambahkan karyawan", "Error", JOptionPane.ERROR_MESSAGE);
                     }
 
                     ps.close();
@@ -197,7 +197,7 @@ public class AddEmployee extends JFrame implements ActionListener {
         }
     }
 
-    private boolean isValidAge(String age) {
+    public boolean isValidAge(String age) {
         try {
             int ageValue = Integer.parseInt(age);
             return ageValue > 0;
@@ -206,13 +206,13 @@ public class AddEmployee extends JFrame implements ActionListener {
         }
     }
 
-    private boolean isValidPhoneNumber(String phoneNumber) {
-        String regex = "\\d{10,12}"; // Phone number format: 10 to 12 digit numbers
+    public boolean isValidPhoneNumber(String phoneNumber) {
+        String regex = "\\d{10,12}"; // Format nomor telepon: 10 hingga 12 digit angka
         return Pattern.matches(regex, phoneNumber);
     }
 
-    private boolean isValidEmail(String email) {
-        String regex = "^[\\w.-]+@[\\w.-]+\\.[A-Za-z]{2,}$"; // Valid email format
+    public boolean isValidEmail(String email) {
+        String regex = "^[\\w.-]+@[\\w.-]+\\.[A-Za-z]{2,}$"; // Format email yang valid
         return Pattern.matches(regex, email);
     }
 
@@ -220,3 +220,4 @@ public class AddEmployee extends JFrame implements ActionListener {
         new AddEmployee();
     }
 }
+
