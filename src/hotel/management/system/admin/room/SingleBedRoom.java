@@ -7,7 +7,13 @@ public class SingleBedRoom extends Room {
         super(roomNumber, availability, status, price);
     }
 
-    public static double getHargaKamar() {
+    @Override
+    public double getHargaKamar() {
         return HARGA_KAMAR;
+    }
+
+    @Override
+    protected String getBedType() {
+        return "Single Bed";
     }
 }

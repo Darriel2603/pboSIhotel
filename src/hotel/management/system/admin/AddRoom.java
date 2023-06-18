@@ -37,7 +37,7 @@ public class AddRoom extends JFrame implements ActionListener {
         roomnoField.setBounds(200, 80, 150, 30);
         add(roomnoField);
 
-        availableLabel = new JLabel("Available");
+        availableLabel = new JLabel("Availability");
         availableLabel.setFont(new Font("Inter", Font.PLAIN, 16));
         availableLabel.setBounds(60, 130, 120, 20);
         add(availableLabel);
@@ -80,14 +80,14 @@ public class AddRoom extends JFrame implements ActionListener {
         typeCombo.addActionListener(this); // Tambahkan ActionListener untuk menangani perubahan tipe kamar
         add(typeCombo);
 
-        addBtn = new JButton("Add Room");
+        addBtn = new JButton("Tambah Kamar");
         addBtn.setForeground(Color.WHITE);
         addBtn.setBackground(Color.BLACK);
         addBtn.setBounds(60, 350, 130, 30);
         addBtn.addActionListener(this);
         add(addBtn);
 
-        cancelBtn = new JButton("Cancel");
+        cancelBtn = new JButton("Batal");
         cancelBtn.setBackground(Color.WHITE);
         cancelBtn.setBackground(Color.WHITE);
         cancelBtn.setBounds(220, 350, 130, 30);
@@ -112,9 +112,9 @@ public class AddRoom extends JFrame implements ActionListener {
             double finalPrice;
 
             if (selectedType.equals("Single Bed")) {
-                finalPrice = SingleBedRoom.getHargaKamar(); // Mengambil harga kamar dari kelas SingleBedRoom
+                finalPrice = new SingleBedRoom("", "", "", 0).getHargaKamar(); // Mengambil harga kamar dari kelas SingleBedRoom
             } else {
-                finalPrice = DoubleBedRoom.getHargaKamar(); // Mengambil harga kamar dari kelas DoubleBedRoom
+                finalPrice = new DoubleBedRoom("", "", "", 0).getHargaKamar(); // Mengambil harga kamar dari kelas DoubleBedRoom
             }
 
             priceField.setText(String.valueOf(finalPrice)); // Mengatur nilai harga kamar pada priceField
@@ -127,10 +127,13 @@ public class AddRoom extends JFrame implements ActionListener {
 
             // Lakukan operasi database untuk menyimpan data kamar ke dalam tabel
             try {
-                Room room = new Room(roomNumber, availability, cleaningStatus, price); // Membuat objek kelas Room
-                room.addRoomToDatabase(Integer.parseInt(roomNumber), availability, cleaningStatus, price, bedType);
-
-
+                Room room;
+                if (bedType.equals("Single Bed")) {
+                    room = new SingleBedRoom(roomNumber, availability, cleaningStatus, price);
+                } else {
+                    room = new DoubleBedRoom(roomNumber, availability, cleaningStatus, price);
+                }
+                room.addRoomToDatabase();
             } catch (Exception ex) {
                 ex.printStackTrace();
                 JOptionPane.showMessageDialog(this, "Gagal menambahkan kamar. Silakan coba lagi.");
@@ -139,13 +142,6 @@ public class AddRoom extends JFrame implements ActionListener {
             setVisible(false);
         }
     }
-
-
-
-
-
-
-
 
     public static void main(String[] args) {
         new AddRoom();

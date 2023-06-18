@@ -5,7 +5,7 @@ import javax.swing.*;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-public class Room extends JFrame {
+public abstract class Room extends JFrame {
     protected String roomNumber;
     protected String availability;
     protected String status;
@@ -18,14 +18,16 @@ public class Room extends JFrame {
         this.price = price;
     }
 
-    public void addRoomToDatabase(int roomNumber, String availability, String cleaningStatus, double price, String bedType) {
+    public abstract double getHargaKamar(); // Deklarasikan metode abstrak getHargaKamar()
+
+    public void addRoomToDatabase() {
         try {
             Conn c = new Conn();
 
             // Validasi nomor kamar yang tidak konflik
             String query = "SELECT * FROM room WHERE roomnumber = ?";
             PreparedStatement pstmt = c.connection.prepareStatement(query);
-            pstmt.setInt(1, roomNumber);
+            pstmt.setString(1, roomNumber);
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
                 // Konflik nomor kamar, minta pengguna memasukkan nomor kamar yang berbeda
@@ -34,11 +36,11 @@ public class Room extends JFrame {
                 // Nomor kamar tidak ada dalam database, eksekusi perintah INSERT
                 query = "INSERT INTO room(roomnumber, availability, cleaning_status, price, bed_type) VALUES (?, ?, ?, ?, ?)";
                 pstmt = c.connection.prepareStatement(query);
-                pstmt.setInt(1, roomNumber);
+                pstmt.setString(1, roomNumber);
                 pstmt.setString(2, availability);
-                pstmt.setString(3, cleaningStatus);
+                pstmt.setString(3, status);
                 pstmt.setDouble(4, price);
-                pstmt.setString(5, bedType);
+                pstmt.setString(5, getBedType());
                 pstmt.executeUpdate();
                 JOptionPane.showMessageDialog(null, "Kamar berhasil ditambahkan");
                 setVisible(false);
@@ -48,7 +50,5 @@ public class Room extends JFrame {
         }
     }
 
-
-
-
+    protected abstract String getBedType(); // Deklarasikan metode abstrak getBedType()
 }
